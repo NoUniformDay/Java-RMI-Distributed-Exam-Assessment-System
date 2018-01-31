@@ -8,19 +8,21 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 //Client program, which connects to the bank using RMI and class methods of the remote bank object
 public class StudentClient {
     static int serverAddress, serverPort, account;
-    static int courseCode; //new students course code, for querying assessment
-    static int username;
     static String operation, password;
-    static long sessionID, id=0;
+    static int sessionID, id=0;
     static ExamServerInterface examEng;
+    static int studentID;
+    static String courseCode; //new students course code, for querying assessment
     static Date startDate, endDate;
+    static ArrayList<Assessment> assessments; //Student assessments
 
-    public static void main (String args[]) {
+    public static void main (String args[]) throws UnauthorizedAccess, NoMatchingAssessment {
         try {
             //Parse the command line arguments into the program
             getCommandLineArguments(args);
@@ -36,111 +38,58 @@ public class StudentClient {
             e.printStackTrace();
             System.out.println(e);
         }
-        double balance;
-
+  
         //Switch based on the operation
         switch (operation){
             case "login":
                 try {
-                    //Login with username and password
-                    sessionID = examEng.login(username, password);
-                    Assessment a = examEng.getAssessment(sessionID, username, courseCode)
+                    //Login with studentID and password
+                    sessionID = examEng.login(studentID, password);
+                    Assessment a = examEng.getAssessment(sessionID, studentID, courseCode);
+                    
+                    /*
                     //Account acc = examEng.accountDetails(id);
                     //Print account details
                     System.out.println("--------------------------\nAccount Details:\n--------------------------\n" +
                                        "Account Number: " + acc.getAccountNumber() +
                                        "\nSessionID: " + id +
-                                       "\nUsername: " + acc.getUserName() +
+                                       "\nstudentID: " + acc.getstudentID() +
                                        "\nBalance: " + acc.getBalance() +
                                        "\n--------------------------\n");
                     System.out.println("Session active for 5 minutes");
+                    
                     System.out.println("Use Session Token " + id + " for all other operations");
+                    */
                 //Catch exceptions that can be thrown from the server
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 } catch (InvalidLoginException e) {
                     e.printStackTrace();
-                } catch (InvalidSessionException e) {
-                    e.printStackTrace();
                 }
                 break;
 
-            case "deposit":
+            case "getAssessment":
                 try {
-                    //Make bank deposit and get updated balance
-                    balance = bank.deposit(account, amount, sessionID);
-                    System.out.println("Successfully deposited E" + amount + " into account " + account);
-                    System.out.println("New balance: E" + balance);
+                    //Retrieves an assessment for logged in user for particular course code e.g "CT475"
+                	 	Assessment a = examEng.getAssessment(sessionID, studentID, courseCode);
+                	 	
+                	 	
                 //Catch exceptions that can be thrown from the server
                 } catch (RemoteException e) {
                     e.printStackTrace();
-                } catch (InvalidSessionException e) {
-                    System.out.println(e.getMessage());
-                }
-                break;
-
-            case "withdraw":
-                try {
-                    //Make bank withdrawal and get updated balance
-                    balance = bank.withdraw(account, amount, sessionID);
-                    System.out.println("Successfully withdrew E" + amount + " from account " + account +
-                                       "\nRemaining Balance: E" + balance);
-                //Catch exceptions that can be thrown from the server
-                } catch (RemoteException e) {
+                } catch (NoMatchingAssessment e) {
                     e.printStackTrace();
-                } catch (InvalidSessionException e) {
-                    System.out.println(e.getMessage());
-                } catch (InsufficientFundsException e) {
-                    System.out.println(e.getMessage());
                 }
                 break;
-
-            case "inquiry":
-                try {
-                    //Get account details from bank
-                    Account acc = bank.inquiry(account,sessionID);
-                    System.out.println("--------------------------\nAccount Details:\n--------------------------\n" +
-                            "Account Number: " + acc.getAccountNumber() +
-                            "\nUsername: " + acc.getUserName() +
-                            "\nBalance: E" + acc.getBalance() +
-                            "\n--------------------------\n");
-                //Catch exceptions that can be thrown from the server
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (InvalidSessionException e) {
-                    System.out.println(e.getMessage());
-                }
-                break;
-
-            case "statement":
-                Statement s = null;
-                try {
-                    //Get statement for required dates
-                    s = (Statement) bank.getStatement(account, startDate, endDate, sessionID);
-
-                    //format statement for printing to the window
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    System.out.print("-----------------------------------------------------------------------\n");
-                    System.out.println("Statement for Account " + account + " between " +
-                                       dateFormat.format(startDate) + " and " + dateFormat.format(endDate));
-                    System.out.print("-----------------------------------------------------------------------\n");
-                    System.out.println("Date\t\t\tTransaction Type\tAmount\t\tBalance");
-                    System.out.print("-----------------------------------------------------------------------\n");
-
-                    for(Object t : s.getTransations()) {
-                        System.out.println(t);
-                    }
-                    System.out.print("-----------------------------------------------------------------------\n");
-                //Catch exceptions that can be thrown from the server
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (InvalidSessionException e) {
-                    System.out.println(e.getMessage());
-                } catch (StatementException e) {
-                    System.out.println(e.getMessage());
-                }
-                break;
-
+                
+            // submit and assignment
+                
+            case "submitAssessment":
+			break;
+                
+            case "getAvailableSummary":
+			break;
+                
             default:
                 //Catch all case for operation that isn't one of the above
                 System.out.println("Operation not supported");
@@ -160,25 +109,25 @@ public class StudentClient {
         operation = args[2];
         switch (operation){
             case "login":
-                username = args[3];
+                studentID = Integer.parseInt(args[3]);
                 password = args[4];
                 break;
-            case "withdraw":
-            case "deposit":
-                amount = Double.parseDouble(args[4]);
+            case "getAvailableSummary":
                 account = Integer.parseInt(args[3]);
-                sessionID = Long.parseLong(args[5]);
+                sessionID = Integer.parseInt(args[4]);
                 break;
-            case "inquiry":
+            case "getAssessment":
                 account = Integer.parseInt(args[3]);
-                sessionID = Long.parseLong(args[4]);
+                sessionID = Integer.parseInt(args[4]);
+                courseCode = args[5];
                 break;
-            case "statement":
+            case "submitAssignment":
                 account = Integer.parseInt(args[3]);
-                startDate = new Date(args[4]);
-                endDate = new Date(args[5]);
-                sessionID = Long.parseLong(args[6]);
-                break;
+                sessionID = Integer.parseInt(args[4]);
+                assessmentID = Integer.parseInt(args[5]);
+                //startDate = new Date(args[4]);
+                //endDate = new Date(args[5]);
+            break;
         }
     }
 }

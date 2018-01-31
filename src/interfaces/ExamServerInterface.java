@@ -16,7 +16,7 @@ public interface ExamServerInterface extends Remote {
 
 	// Return an access token that allows access to the server for some time period
 	public int login(int studentid, String password) throws 
-		UnauthorizedAccess, RemoteException;
+		UnauthorizedAccess, RemoteException, InvalidLoginException;
 
 	// Return a summary list of Assessments currently available for this studentid
 	public List<String> getAvailableSummary(int token, int studentid) throws

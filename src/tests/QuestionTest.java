@@ -1,5 +1,7 @@
-import static org.junit.Assert.*;
-import org.junit.Test;
+package tests;
+
+import org.junit.*;
+
 import server.Question;
 public class QuestionTest {
 
