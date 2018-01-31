@@ -1,0 +1,4 @@
+
+grant codeBase "file:/Users/EricMcEvoy/Google Drive/Java Eclipse/Java-RMI-Assignment1/src"{
+    permission java.security.AllPermission;
+};

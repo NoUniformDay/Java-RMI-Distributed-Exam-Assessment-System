@@ -15,12 +15,13 @@ import java.util.Date;
 public class StudentClient {
     static int serverAddress, serverPort, account;
     static String operation, password;
+    static int studentID; //id of logged in student client
     static int sessionID, id=0;
-    static ExamServerInterface examEng;
-    static int studentID;
+    static ExamServerInterface examEng; //Exam Server
     static String courseCode; //new students course code, for querying assessment
     static Date startDate, endDate;
     static ArrayList<Assessment> assessments; //Student assessments
+    static Assessment ass;
 
     public static void main (String args[]) throws UnauthorizedAccess, NoMatchingAssessment {
         try {
@@ -45,7 +46,7 @@ public class StudentClient {
                 try {
                     //Login with studentID and password
                     sessionID = examEng.login(studentID, password);
-                    Assessment a = examEng.getAssessment(sessionID, studentID, courseCode);
+                  
                     
                     /*
                     //Account acc = examEng.accountDetails(id);
@@ -71,7 +72,7 @@ public class StudentClient {
             case "getAssessment":
                 try {
                     //Retrieves an assessment for logged in user for particular course code e.g "CT475"
-                	 	Assessment a = examEng.getAssessment(sessionID, studentID, courseCode);
+                	 	ass = examEng.getAssessment(sessionID, studentID, courseCode);
                 	 	
                 	 	
                 //Catch exceptions that can be thrown from the server
@@ -85,6 +86,13 @@ public class StudentClient {
             // submit and assignment
                 
             case "submitAssessment":
+            		try {
+            			examEng.submitAssessment(sessionID, studentID, ass);
+            		} catch (RemoteException e) {
+                        e.printStackTrace();
+                } catch (NoMatchingAssessment e) {
+                        e.printStackTrace();
+                }
 			break;
                 
             case "getAvailableSummary":
@@ -109,6 +117,7 @@ public class StudentClient {
         operation = args[2];
         switch (operation){
             case "login":
+            		System.out.println("Inside Login Command Line Switch");
                 studentID = Integer.parseInt(args[3]);
                 password = args[4];
                 break;
@@ -124,7 +133,7 @@ public class StudentClient {
             case "submitAssignment":
                 account = Integer.parseInt(args[3]);
                 sessionID = Integer.parseInt(args[4]);
-                assessmentID = Integer.parseInt(args[5]);
+                //ass.getAssociatedID() = Integer.parseInt(args[5]);
                 //startDate = new Date(args[4]);
                 //endDate = new Date(args[5]);
             break;

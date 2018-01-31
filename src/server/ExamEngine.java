@@ -1,4 +1,3 @@
-
 package server;
 
 import java.rmi.RemoteException;
@@ -10,13 +9,13 @@ import java.util.List;
 
 import exceptions.*;
 import interfaces.*;
-import server.*;
+
 
 //Main controller then implements all the methods in the ExamServer interface
 public class ExamEngine extends UnicastRemoteObject implements ExamServerInterface {
 	
 	private static final long serialVersionUID = 1L;
-	private List<Account> accounts; // users accounts
+	private List<StudentAccount> studentAccounts; // users StudentAccounts
 	private List<Assessment> assessments; // assessments on the server
 	private List<Session> sessions, deadSessions; // user sessions, past and present
 	
@@ -24,28 +23,29 @@ public class ExamEngine extends UnicastRemoteObject implements ExamServerInterfa
     public ExamEngine() throws RemoteException {
         super();
         
-        accounts = new ArrayList();
+        studentAccounts = new ArrayList();
         assessments = new ArrayList<>();
         sessions = new ArrayList<>();
         deadSessions = new ArrayList<>();
 
-        accounts.add(new Account("user1", "pass1"));
-        accounts.add(new Account("user2", "pass2"));
-        accounts.add(new Account("user3", "pass3"));
+        studentAccounts.add(new StudentAccount(123, "pass1"));
+        studentAccounts.add(new StudentAccount(456, "pass2"));
+        studentAccounts.add(new StudentAccount(678, "pass3"));
     }
 
     // Implement the methods defined in the ExamServer interface...
     // Return an access token that allows access to the server for some time period
     public int login(int username, String password) throws 
                 UnauthorizedAccess, RemoteException, InvalidLoginException {
-	///Loop through the accounts to find the correct one for given username and password
-        for(Account acc : accounts) {
-            if(username == (acc.getAccountNumber()) && password.equals(acc.getPassword())){
-                System.out.println(">> Account " + acc.getAccountNumber() + " logged in");
+	///Loop through the StudentAccounts to find the correct one for given username and password
+        for(StudentAccount acc : studentAccounts) {
+            if(username == (acc.getStudentID()) && password.equals(acc.getPassword())){
+                System.out.println(">> StudentAccount " + acc.getStudentID() + " logged in");
                 //Create a new session on successful login, and return ID to the client
-                Session s = new Session(acc);
-                sessions.add(s);
-                return (int) s.sessionToken; //returns unique access token to user for time period
+                //Session s = new Session(acc);
+                //sessions.add(s);
+                //System.out.println("Session Token : "+s);
+                return 1;//(int) s.sessionToken; //returns unique access token to user for time period
             }
         }
         //Throw exception if login details are not valid
@@ -54,14 +54,14 @@ public class ExamEngine extends UnicastRemoteObject implements ExamServerInterfa
     
   
     
-    @Override
+   
 	public Assessment getAssessment(int token, int studentid, String courseCode)
 			throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
 		
 		return null;
 	}
 
-	@Override
+	
 	public void submitAssessment(int token, int studentid, Assessment completed)
 			throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
 		// TODO Auto-generated method stub

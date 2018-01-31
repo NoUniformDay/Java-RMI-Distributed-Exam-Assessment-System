@@ -13,17 +13,17 @@ public class Session extends TimerTask implements Serializable{
     private int timeAlive;
     private Timer timer;
     private volatile boolean alive;
-    private Account account;
+    private StudentAccount studentAccount;
     public long sessionToken;
 
     //static variables to specify max session time, and timer delay
     private static final int MAX_SESSION_LENGTH = 60 * 5;
     private static final long DELAY = 1000;
 
-    public Session(Account account) {
+    public Session(StudentAccount studentAccount) {
         //generate a random 6 digit sessionToken
         this.sessionToken = (int)(Math.random()*900000)+100000;
-        this.account = account;
+        this.studentAccount = studentAccount;
         this.alive = true;
         this.timeAlive = 0;
         //create timer object to allow the task to be scheduled to run every second
@@ -70,13 +70,13 @@ public class Session extends TimerTask implements Serializable{
         return MAX_SESSION_LENGTH;
     }
 
-    public Account getAccount(){
-        return this.account;
+    public StudentAccount getStudentAccount(){
+        return this.studentAccount;
     }
 
     @Override
     public String toString() {
-        return "Account: " + this.account.getAccountNumber() + "\nSession Token: " +
+        return "StudentAccount: " + this.studentAccount.getStudentID() + "\nSession Token: " +
                 this.sessionToken +"\nTime Alive: " + this.timeAlive + "\nAlive: " + this.alive;
     }
 }
