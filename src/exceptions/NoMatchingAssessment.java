@@ -1,4 +1,4 @@
-package ct414;
+package exceptions;
 
 public class NoMatchingAssessment extends Exception {
 
