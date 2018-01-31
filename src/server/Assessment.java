@@ -13,18 +13,18 @@ import interfaces.AssessmentInterface;
 public class Assessment implements AssessmentInterface {
 	
 	private int studentID; //Student ID associated with this assessment
-	private String info; //Information about an assesment
+	private String info; //Information about an assessment
 	private String courseCode; //Course giving assessment
 	private Date closingDate; //Closing date of assignment
 	public List<Question> questions; //list of questions in assessment 
 	
 	// Needs link to user ? 
-	public Assessment(int sID, String inf,String c, ArrayList<Question> qs){
+	public Assessment(int sID, String inf,String c, ArrayList<Question> qs, Date closingDate){
 		this.studentID = sID;
 		this.info = inf;
 		this.courseCode =c;
 		this.questions = qs;
-		
+		this.closingDate = closingDate;
 	}
 
 	// Return information about the assessment

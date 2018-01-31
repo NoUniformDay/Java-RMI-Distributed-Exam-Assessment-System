@@ -36,11 +36,11 @@ public class ExamEngine extends UnicastRemoteObject implements ExamServerInterfa
 
     // Implement the methods defined in the ExamServer interface...
     // Return an access token that allows access to the server for some time period
-    public int login(String username, String password) throws 
+    public int login(int username, String password) throws 
                 UnauthorizedAccess, RemoteException, InvalidLoginException {
 	///Loop through the accounts to find the correct one for given username and password
         for(Account acc : accounts) {
-            if(username.equals(acc.getUserName()) && password.equals(acc.getPassword())){
+            if(username == (acc.getAccountNumber()) && password.equals(acc.getPassword())){
                 System.out.println(">> Account " + acc.getAccountNumber() + " logged in");
                 //Create a new session on successful login, and return ID to the client
                 Session s = new Session(acc);
@@ -51,6 +51,8 @@ public class ExamEngine extends UnicastRemoteObject implements ExamServerInterfa
         //Throw exception if login details are not valid
         throw new InvalidLoginException(username,password);	
     }
+    
+  
     
     @Override
 	public Assessment getAssessment(int token, int studentid, String courseCode)
@@ -66,11 +68,6 @@ public class ExamEngine extends UnicastRemoteObject implements ExamServerInterfa
 		
 	}
 
-	@Override
-	public int login(int studentid, String password) throws UnauthorizedAccess, RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
     // Return a summary list of Assessments currently available for this studentid
     public List<String> getAvailableSummary(int sessionToken, int studentid) throws
@@ -78,9 +75,7 @@ public class ExamEngine extends UnicastRemoteObject implements ExamServerInterfa
 
         // TBD: You need to implement this method!
         // For the moment method just returns an empty or null value to allow it to compile
-    	
-    	
-    		
+    	    		
         return null;
     }
 
