@@ -16,5 +16,11 @@ Assessment - this (serializable) interface provides methods for the retrieval of
 
 How to run  : 
 
-java -cp /Users/macbook/rmidemo -Djava.rmi.server.codebase=file:/Users/macbook/rmidemo/ -Djava.rmi.server.hostname=localhost -Djava.security.policy=server.policy ct414/ExamEngine
+Navigate to scripts/ folder and run scripts :
+
+1. removeClassFiles.sh		
+2. compileClientAndServer.sh	
+3. rmiregistary 7777
+3. startServer.sh
+4. startClient.sh
 
