@@ -47,21 +47,6 @@ public class StudentClient {
                     //Login with studentID and password
                     sessionID = examEng.login(studentID, password);
                   
-                    
-                    /*
-                    //Account acc = examEng.accountDetails(id);
-                    //Print account details
-                    System.out.println("--------------------------\nAccount Details:\n--------------------------\n" +
-                                       "Account Number: " + acc.getAccountNumber() +
-                                       "\nSessionID: " + id +
-                                       "\nstudentID: " + acc.getstudentID() +
-                                       "\nBalance: " + acc.getBalance() +
-                                       "\n--------------------------\n");
-                    System.out.println("Session active for 5 minutes");
-                    
-                    System.out.println("Use Session Token " + id + " for all other operations");
-                    */
-                //Catch exceptions that can be thrown from the server
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 } catch (InvalidLoginException e) {
@@ -73,8 +58,7 @@ public class StudentClient {
                 try {
                     //Retrieves an assessment for logged in user for particular course code e.g "CT475"
                 	 	ass = examEng.getAssessment(sessionID, studentID, courseCode);
-                	 	
-                	 	
+   
                 //Catch exceptions that can be thrown from the server
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -84,7 +68,6 @@ public class StudentClient {
                 break;
                 
             // submit and assignment
-                
             case "submitAssessment":
             		try {
             			examEng.submitAssessment(sessionID, studentID, ass);
