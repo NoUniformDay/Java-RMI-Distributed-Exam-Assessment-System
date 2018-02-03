@@ -12,7 +12,7 @@ import interfaces.*;
 
 
 //Main controller then implements all the methods in the ExamServer interface
-public class ExamEngine extends UnicastRemoteObject implements ExamServerInterface {
+public class ExamEngine implements ExamServerInterface {
 	
 	private static final long serialVersionUID = 1L;
 	private List<StudentAccount> studentAccounts; // users StudentAccounts
@@ -31,6 +31,25 @@ public class ExamEngine extends UnicastRemoteObject implements ExamServerInterfa
         studentAccounts.add(new StudentAccount(123, "pass1"));
         studentAccounts.add(new StudentAccount(456, "pass2"));
         studentAccounts.add(new StudentAccount(678, "pass3"));
+    }
+    
+    public static void main(String[] args) {
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
+        try {
+        		System.out.println("Inside Exam Server Main");
+            String name = "ExamServer";
+            ExamServerInterface engine = new ExamEngine();
+            ExamServerInterface stub =
+                (ExamServerInterface) UnicastRemoteObject.exportObject(engine, 0);
+            Registry registry = LocateRegistry.getRegistry();
+            registry.rebind(name, stub);
+            System.out.println("ExamEngine bound");
+        } catch (Exception e) {
+            System.err.println("ExamEngine exception:");
+            e.printStackTrace();
+        }
     }
 
     // Implement the methods defined in the ExamServer interface...
@@ -81,7 +100,7 @@ public class ExamEngine extends UnicastRemoteObject implements ExamServerInterfa
 
     
     // Check Student Session is still active.
-    private boolean checkSessionActive(long sessID) throws InvalidSessionException{
+    private boolean checkSessionActive(int sessID) throws InvalidSessionException{
         //Loop through the sessions
         for(Session s : sessions){
             //Checks if the sessionID passed from client is in the sessions list and active
@@ -107,23 +126,5 @@ public class ExamEngine extends UnicastRemoteObject implements ExamServerInterfa
 
         //throw exception if sessions passed to client is not valid
         throw new InvalidSessionException();
-    }
-
-    public static void main(String[] args) {
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new SecurityManager());
-        }
-        try {
-            String name = "ExamServer";
-            ExamServerInterface engine = new ExamEngine();
-            ExamServerInterface stub =
-                (ExamServerInterface) UnicastRemoteObject.exportObject(engine, 0);
-            Registry registry = LocateRegistry.getRegistry();
-            registry.rebind(name, stub);
-            System.out.println("ExamEngine bound");
-        } catch (Exception e) {
-            System.err.println("ExamEngine exception:");
-            e.printStackTrace();
-        }
     }
 }

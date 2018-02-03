@@ -45,6 +45,7 @@ public class StudentClient {
             case "login":
                 try {
                     //Login with studentID and password
+                	
                     sessionID = examEng.login(studentID, password);
                   
                 } catch (RemoteException e) {

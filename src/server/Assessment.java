@@ -6,7 +6,7 @@ import java.util.List;
 
 import exceptions.InvalidOptionNumber;
 import exceptions.InvalidQuestionNumber;
-import interfaces.AssessmentInterface;
+import interfaces.*;
 
 //Assessment object that contains multiple question objects,
 //adheres to the Assessment interface

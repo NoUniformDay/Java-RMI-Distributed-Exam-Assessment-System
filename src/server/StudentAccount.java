@@ -3,7 +3,7 @@ package server;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import server.*;
+
 
 //StudentAccount class, which holds user details, transactions and balance
 public class StudentAccount implements Serializable {
