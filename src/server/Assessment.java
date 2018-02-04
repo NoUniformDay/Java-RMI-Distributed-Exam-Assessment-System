@@ -1,3 +1,12 @@
+/**
+ * 
+ * Assessment Class implementation
+ * Adheres to Assessment Interface
+ * Written By Eric McEvoy - 13513267
+ * 31/01/2018
+ * 
+ */
+
 package server;
 
 import java.util.ArrayList;
@@ -53,6 +62,10 @@ public class Assessment implements AssessmentInterface {
 
 	// Answer a particular question
 	public void selectAnswer(int questionNumber, int optionNumber) throws InvalidQuestionNumber, InvalidOptionNumber{
+		Question q = this.getQuestion(questionNumber);
+		if(q != null) {
+			q.setChosenAnswerIndex(optionNumber);
+		}
 		return;
 	}
 	
@@ -64,12 +77,22 @@ public class Assessment implements AssessmentInterface {
 		}
 		return 0;
 	}
+	public String getCourseCode(){
+		return this.courseCode;
+	}
 
-	// Return studentid associated with this assessment object
+	// Return student ID associated with this assessment object
 	// This will be preset on the server before object is downloaded
 	public int getAssociatedID() {
 		return this.studentID; 
-		// Return current session token/student id
+	
+	}
+	public String toString() {
+		System.out.println("Name : "+this.info);
+		System.out.println("Course Code: "+this.courseCode);
+		System.out.println("Questions : "+this.questions.toString());
+		System.out.println("Due : "+this.closingDate.toString());
+		return "";
 	}
 }
 

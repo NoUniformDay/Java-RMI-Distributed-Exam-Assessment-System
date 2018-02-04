@@ -18,7 +18,7 @@ public interface AssessmentInterface extends Serializable {
 	// Return the final date / time for submission of completed assessment
 	public Date getClosingDate();
 
-	// Return a list of all questions and anser options
+	// Return a list of all questions and answer options
 	public List<Question> getQuestions();
 
 	// Return one question only with answer options

@@ -4,6 +4,7 @@ import exceptions.*;
 import interfaces.*;
 import server.*;
 
+import java.awt.List;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -16,12 +17,12 @@ public class StudentClient {
     static int serverAddress, serverPort, account;
     static String operation, password;
     static int studentID; //id of logged in student client
-    static int sessionID, id=0;
+    static int sessionID, id=0; //token for logged in student user
     static ExamServerInterface examEng; //Exam Server
     static String courseCode; //new students course code, for querying assessment
     static Date startDate, endDate;
-    static ArrayList<Assessment> assessments; //Student assessments
-    static Assessment ass;
+    static ArrayList<String> assessments; //Student assessments (details)
+    static Assessment assess;
 
     public static void main (String args[]) throws UnauthorizedAccess, NoMatchingAssessment {
         try {
@@ -45,8 +46,10 @@ public class StudentClient {
             case "login":
                 try {
                     //Login with studentID and password
-                	
+                		//Returns a sessionID for this Assessment period
                     sessionID = examEng.login(studentID, password);
+                    
+                    //StudentAccount acc = 
                   
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -58,8 +61,9 @@ public class StudentClient {
             case "getAssessment":
                 try {
                     //Retrieves an assessment for logged in user for particular course code e.g "CT475"
-                	 	ass = examEng.getAssessment(sessionID, studentID, courseCode);
-   
+                	 	assess = examEng.getAssessment(sessionID, studentID, courseCode);
+                	 	System.out.println("getAssessment successful");
+                	 	System.out.println("Assesment Downloaded : "+assess.getInformation());
                 //Catch exceptions that can be thrown from the server
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -71,7 +75,8 @@ public class StudentClient {
             // submit and assignment
             case "submitAssessment":
             		try {
-            			examEng.submitAssessment(sessionID, studentID, ass);
+            			examEng.submitAssessment(sessionID, studentID, assess);
+            			
             		} catch (RemoteException e) {
                         e.printStackTrace();
                 } catch (NoMatchingAssessment e) {
@@ -80,6 +85,18 @@ public class StudentClient {
 			break;
                 
             case "getAvailableSummary":
+     
+				try {
+					List summaries = (List) examEng.getAvailableSummary(sessionID, studentID);
+					//for(String ass :  summaries) {
+						
+					//}
+					
+				} catch (RemoteException e) {
+					
+					e.printStackTrace();
+				}        			
+        		
 			break;
                 
             default:
@@ -101,7 +118,6 @@ public class StudentClient {
         operation = args[2];
         switch (operation){
             case "login":
-            		System.out.println("Inside Login Command Line Switch");
                 studentID = Integer.parseInt(args[3]);
                 password = args[4];
                 break;
@@ -110,16 +126,13 @@ public class StudentClient {
                 sessionID = Integer.parseInt(args[4]);
                 break;
             case "getAssessment":
-                account = Integer.parseInt(args[3]);
-                sessionID = Integer.parseInt(args[4]);
-                courseCode = args[5];
+                //studentID = Integer.parseInt(args[3]);
+                //sessionID = Integer.parseInt(args[4]);
+                courseCode = args[3];
                 break;
             case "submitAssignment":
                 account = Integer.parseInt(args[3]);
                 sessionID = Integer.parseInt(args[4]);
-                //ass.getAssociatedID() = Integer.parseInt(args[5]);
-                //startDate = new Date(args[4]);
-                //endDate = new Date(args[5]);
             break;
         }
     }
