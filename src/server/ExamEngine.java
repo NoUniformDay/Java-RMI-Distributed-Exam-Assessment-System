@@ -114,6 +114,7 @@ public class ExamEngine implements ExamServerInterface {
     		try {
 			if(this.checkSessionActive(token)){ //Client session is active
 				List<String> summaries = new ArrayList<String>(); //List of assessment summaries
+				System.out.println("Getting Available Summary");
 				for(Assessment as :  assessments) {
 					if(as.getAssociatedID() == studentid) { //if assessment belongs to given student ID
 						String summary = as.getInformation();
