@@ -1,5 +1,5 @@
 
-# Java-RMI-Distributed-University-Assessment-System
+# Distributed-University-Assessment-System
 
 Java RMI based Assessment System for the university. 
 
@@ -16,11 +16,14 @@ Assessment - this (serializable) interface provides methods for the retrieval of
 
 How to run  : 
 
-Navigate to scripts/ folder and run scripts :
+Navigate to the project src directory and run the following scripts in different terminals
 
-1. removeClassFiles.sh		
-2. compileClientAndServer.sh	
-3. rmiregistary 7777
-3. startServer.sh
-4. startClient.sh
+Terminal 1 : flush.sh 
+           : rmiregistary 7777
+
+Terminal 2 : startServer.sh
+
+Terminal 3 : startClient.sh
+
+
 
