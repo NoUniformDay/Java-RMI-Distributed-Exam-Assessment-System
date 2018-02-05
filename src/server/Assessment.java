@@ -91,7 +91,7 @@ public class Assessment implements AssessmentInterface {
 		System.out.println("Name : "+this.info);
 		System.out.println("Student ID: "+this.studentID);
 		System.out.println("Course Code: "+this.courseCode);
-		System.out.println(this.questions.toString());
+		this.questions.toString();
 		//System.out.println("Due : "+this.closingDate.toString());
 		return "";
 	}

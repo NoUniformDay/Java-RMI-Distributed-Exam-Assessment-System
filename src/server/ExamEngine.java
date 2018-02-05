@@ -58,11 +58,11 @@ public class ExamEngine implements ExamServerInterface {
 	// Implement the methods defined in the ExamServer interface...
 	// Loops through each StudentAccount object and validates user credentials
 	// Return an access token or sessionID that allows access to the server for some time period
-	public int login(int username, String password) throws UnauthorizedAccess, RemoteException, InvalidLoginException {
+	public int login(int userID, String password) throws UnauthorizedAccess, RemoteException, InvalidLoginException {
 		/// Loop through the StudentAccounts to find the correct one for given username
 		/// and password
 		for (StudentAccount acc : studentAccounts) {
-			if (username == (acc.getStudentID()) && password.equals(acc.getPassword())) {
+			if (userID == (acc.getStudentID()) && password.equals(acc.getPassword())) {
 				System.out.println(">> StudentAccount " + acc.getStudentID() + " logged in");
 				// Create a new session on successful login, and return ID to the client
 				Session s = new Session(acc);
@@ -72,7 +72,7 @@ public class ExamEngine implements ExamServerInterface {
 			}
 		}
 		// Throw exception if login details are not valid
-		throw new InvalidLoginException(username, password);
+		throw new InvalidLoginException(userID, password);
 	}
 
 	// Returns an Assessment object for a given session, student ID and course code
@@ -81,7 +81,7 @@ public class ExamEngine implements ExamServerInterface {
 			try {
 				if (this.checkSessionActive(token)) { // Client session is active
 					for (Assessment assess : assessments) {
-						assess.toString();
+						//assess.toString();
 						if (assess.getAssociatedID() == studentid && assess.getCourseCode().equals(courseCode)) {
 							System.out.println("Found Assessment");
 							return assess; // assessment object with corresponding student id and courseCode
@@ -101,6 +101,7 @@ public class ExamEngine implements ExamServerInterface {
 		try {
 			if (this.checkSessionActive(token)) { // Client session is active
 				assessments.add(completed); //add completed assessment to assessment list
+				System.out.println("Assessment Submitted Successfully!");
 			}
 		} catch (InvalidSessionException e) {
 			e.printStackTrace();

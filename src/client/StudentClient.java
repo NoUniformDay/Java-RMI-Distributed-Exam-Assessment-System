@@ -62,7 +62,7 @@ public class StudentClient {
                     //Retrieves an assessment for logged in user for particular course code e.g "CT475"
                 	 	assess = examEng.getAssessment(sessionID, studentID, courseCode);
                 	 	System.out.println("Assesment Downloaded!");
-                	 	System.out.println(assess.toString());
+                	 	assess.toString(); //Print assessment object
                 	 	System.out.println("Submit answers using the Question Number");
                 	 	System.out.println("Answers can be resubmitted multiple times up until the deadline");
                 //Catch exceptions that can be thrown from the server

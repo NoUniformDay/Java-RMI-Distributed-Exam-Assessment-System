@@ -18,7 +18,7 @@ public class Session extends TimerTask implements Serializable{
 
     //static variables to specify max session time, and timer delay
     private static final int MAX_SESSION_LENGTH = 600 * 5;
-    private static final long DELAY = 10000;
+    private static final long DELAY = 100;
 
     public Session(StudentAccount studentAccount) {
         //generate a random 6 digit sessionToken
