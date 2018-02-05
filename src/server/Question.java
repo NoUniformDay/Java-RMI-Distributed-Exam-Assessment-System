@@ -61,7 +61,9 @@ public class Question implements QuestionInterface {
 	
 	public String toString() {
 		System.out.println("Question : "+this.qInfo);
-		System.out.println("Options : "+this.answerOptions.toString());
+		for(int i=0; i<this.answerOptions.length;i++) {
+			System.out.println("Question "+i+" : "+this.answerOptions[i]);
+		}
 		return "";
 	}
 	

@@ -48,7 +48,7 @@ public class ExamEngine implements ExamServerInterface {
 			System.out.println("Located Registry");
 			registry.rebind(name, stub);
 			System.out.println("Rebinded Successfully");
-			System.out.println("ExamEngine bound");
+			System.out.println("ExamEngine Bound and Running");
 		} catch (Exception e) {
 			System.err.println("ExamEngine exception:");
 			e.printStackTrace();
@@ -56,7 +56,8 @@ public class ExamEngine implements ExamServerInterface {
 	}
 
 	// Implement the methods defined in the ExamServer interface...
-	// Return an access token that allows access to the server for some time period
+	// Loops through each StudentAccount object and validates user credentials
+	// Return an access token or sessionID that allows access to the server for some time period
 	public int login(int username, String password) throws UnauthorizedAccess, RemoteException, InvalidLoginException {
 		/// Loop through the StudentAccounts to find the correct one for given username
 		/// and password
@@ -77,24 +78,29 @@ public class ExamEngine implements ExamServerInterface {
 	// Returns an Assessment object for a given session, student ID and course code
 	public Assessment getAssessment(int token, int studentid, String courseCode)
 			throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
-		System.out.println("Inside getAssessment");
-			if (true) { // Client session is active //this.checkSessionActive(token)
-				for (Assessment assess : assessments) {
-					System.out.println("Looping getAssessment");
-					if (assess.getAssociatedID() == studentid && assess.getCourseCode().equals(courseCode)) {
-						System.out.println("Found Assessment");
-						return assess; // assessment object with corresponding student id and courseCode
+			try {
+				if (this.checkSessionActive(token)) { // Client session is active
+					for (Assessment assess : assessments) {
+						assess.toString();
+						if (assess.getAssociatedID() == studentid && assess.getCourseCode().equals(courseCode)) {
+							System.out.println("Found Assessment");
+							return assess; // assessment object with corresponding student id and courseCode
+						}
 					}
 				}
+			} catch (InvalidSessionException e) {
+				e.printStackTrace();
 			}
 		return null;
 	}
-
+	
+	//Submits or saves Assessment object submitted for a given user
+	//Check session is still active before doing so
 	public void submitAssessment(int token, int studentid, Assessment completed)
 			throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
 		try {
 			if (this.checkSessionActive(token)) { // Client session is active
-				assessments.add(completed);
+				assessments.add(completed); //add completed assessment to assessment list
 			}
 		} catch (InvalidSessionException e) {
 			e.printStackTrace();
@@ -102,13 +108,13 @@ public class ExamEngine implements ExamServerInterface {
 	}
 
 	// Return a summary list of Assessments currently available for this studentid
-	public List<String> getAvailableSummary(int sessionToken, int studentid) throws
+	public List<String> getAvailableSummary(int token, int studentid) throws
                 UnauthorizedAccess, NoMatchingAssessment, RemoteException {
     		try {
-			if(this.checkSessionActive(sessionToken)){ //Client session is active
-				List<String> summaries = new ArrayList<String>();
+			if(this.checkSessionActive(token)){ //Client session is active
+				List<String> summaries = new ArrayList<String>(); //List of assessment summaries
 				for(Assessment as :  assessments) {
-					if(as.getAssociatedID() == studentid) {
+					if(as.getAssociatedID() == studentid) { //if assessment belongs to given student ID
 						String summary = as.getInformation();
 						summaries.add(summary);
 					}
