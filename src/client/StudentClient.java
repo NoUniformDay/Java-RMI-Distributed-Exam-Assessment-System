@@ -47,9 +47,9 @@ public class StudentClient {
             case "login":
                 try {
                     //Login with studentID and password
-                		//Returns a sessionID for this Assessment period
+                		//Returns a sessionID token for log in period
                     sessionID = examEng.login(studentID, password);
-                  
+                    
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 } catch (InvalidLoginException e) {
@@ -103,8 +103,7 @@ public class StudentClient {
 					e.printStackTrace();
 				}        			
         		
-			break;
-                
+			break;    
             default:
                 //Catch all case for operation that isn't one of the above
                 System.out.println("Operation not supported");
@@ -114,7 +113,7 @@ public class StudentClient {
 
     public static void getCommandLineArguments(String args[]) throws InvalidArgumentException{
         //Makes sure server, port and operation are entered as arguments
-        if(args.length < 4) {
+        if(args.length < 3) {
             throw new InvalidArgumentException(args.length);
         }
         
@@ -130,8 +129,7 @@ public class StudentClient {
                 password = args[4];
                 break;
             case "getAvailableSummary":
-                account = Integer.parseInt(args[3]);
-                sessionID = Integer.parseInt(args[4]);
+            		studentID = Integer.parseInt(args[3]);
                 break;
             case "getAssessment":
                 courseCode = args[3];
