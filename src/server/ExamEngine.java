@@ -77,18 +77,16 @@ public class ExamEngine implements ExamServerInterface {
 	// Returns an Assessment object for a given session, student ID and course code
 	public Assessment getAssessment(int token, int studentid, String courseCode)
 			throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
-		try {
-			if (this.checkSessionActive(token)) { // Client session is sctivr
+		System.out.println("Inside getAssessment");
+			if (true) { // Client session is active //this.checkSessionActive(token)
 				for (Assessment assess : assessments) {
+					System.out.println("Looping getAssessment");
 					if (assess.getAssociatedID() == studentid && assess.getCourseCode().equals(courseCode)) {
 						System.out.println("Found Assessment");
 						return assess; // assessment object with corresponding student id and courseCode
 					}
 				}
 			}
-		} catch (InvalidSessionException e) {
-			e.printStackTrace();
-		}
 		return null;
 	}
 
@@ -195,9 +193,9 @@ public class ExamEngine implements ExamServerInterface {
 		ass3qs.add(q2);
 		
 		//Create assessment variables
-		Assessment a1 = new Assessment(123,"Assessment 1","CT475",ass1qs, new Date());
-		Assessment a2 = new Assessment(456,"Assessment 2","CT420",ass2qs, new Date());
-		Assessment a3 = new Assessment(678,"Assessment 3","CT480",ass3qs, new Date());
+		Assessment a1 = new Assessment(1,"Assessment 1","CT475",ass1qs, new Date());
+		Assessment a2 = new Assessment(2,"Assessment 2","CT420",ass2qs, new Date());
+		Assessment a3 = new Assessment(1,"Assessment 3","CT480",ass3qs, new Date());
 	
 		assessments.add(a1);
 		assessments.add(a2);

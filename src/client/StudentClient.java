@@ -48,7 +48,7 @@ public class StudentClient {
                     //Login with studentID and password
                 		//Returns a sessionID for this Assessment period
                     sessionID = examEng.login(studentID, password);
-                    
+                   
                     //StudentAccount acc = 
                   
                 } catch (RemoteException e) {
@@ -62,8 +62,9 @@ public class StudentClient {
                 try {
                     //Retrieves an assessment for logged in user for particular course code e.g "CT475"
                 	 	assess = examEng.getAssessment(sessionID, studentID, courseCode);
+                	 	System.out.println(assess);
                 	 	System.out.println("getAssessment successful");
-                	 	System.out.println("Assesment Downloaded : "+assess.getInformation());
+                	 	//System.out.println("Assesment Downloaded : "+assess.getInformation());
                 //Catch exceptions that can be thrown from the server
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -127,8 +128,8 @@ public class StudentClient {
                 break;
             case "getAssessment":
                 //studentID = Integer.parseInt(args[3]);
-                //sessionID = Integer.parseInt(args[4]);
-                courseCode = args[3];
+                sessionID = Integer.parseInt(args[3]);
+                courseCode = args[4];
                 break;
             case "submitAssignment":
                 account = Integer.parseInt(args[3]);
