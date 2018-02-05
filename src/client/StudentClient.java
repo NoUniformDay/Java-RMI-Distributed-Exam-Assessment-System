@@ -22,9 +22,10 @@ public class StudentClient {
     static String courseCode; //new students course code, for querying assessment
     static Date startDate, endDate;
     static ArrayList<String> assessments; //Student assessments (details)
-    static Assessment assess;
+    static Assessment assess; //Assessment student is working on
+    static int[] submittedAnswers; //Submitted answer variables
 
-    public static void main (String args[]) throws UnauthorizedAccess, NoMatchingAssessment {
+    public static void main (String args[]) throws UnauthorizedAccess, NoMatchingAssessment, InvalidQuestionNumber, InvalidOptionNumber {
         try {
             //Parse the command line arguments into the program
             getCommandLineArguments(args);
@@ -48,8 +49,6 @@ public class StudentClient {
                     //Login with studentID and password
                 		//Returns a sessionID for this Assessment period
                     sessionID = examEng.login(studentID, password);
-                   
-                    //StudentAccount acc = 
                   
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -62,9 +61,10 @@ public class StudentClient {
                 try {
                     //Retrieves an assessment for logged in user for particular course code e.g "CT475"
                 	 	assess = examEng.getAssessment(sessionID, studentID, courseCode);
-                	 	System.out.println(assess);
-                	 	System.out.println("getAssessment successful");
-                	 	//System.out.println("Assesment Downloaded : "+assess.getInformation());
+                	 	System.out.println("Assesment Downloaded!");
+                	 	System.out.println(assess.toString());
+                	 	System.out.println("Submit answers using the Question Number");
+                	 	System.out.println("Answers can be resubmitted multiple times up until the deadline");
                 //Catch exceptions that can be thrown from the server
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -73,10 +73,14 @@ public class StudentClient {
                 }
                 break;
                 
-            // submit and assignment
+            // submit and assignment any amount up until Assessment deadline
             case "submitAssessment":
             		try {
-            			examEng.submitAssessment(sessionID, studentID, assess);
+            			assess.selectAnswer(0, submittedAnswers[0]); //set selected answers from user
+            			assess.selectAnswer(1, submittedAnswers[0]);
+            			assess.selectAnswer(2, submittedAnswers[0]);
+            			examEng.submitAssessment(sessionID, studentID, assess); //push assessment object to server
+            			System.out.println("Assessment Submitted Successfully!");
             			
             		} catch (RemoteException e) {
                         e.printStackTrace();
@@ -88,10 +92,11 @@ public class StudentClient {
             case "getAvailableSummary":
      
 				try {
-					List summaries = (List) examEng.getAvailableSummary(sessionID, studentID);
-					//for(String ass :  summaries) {
-						
-					//}
+					ArrayList<String> summaries = (ArrayList<String>) examEng.getAvailableSummary(sessionID, studentID);
+					System.out.println("Available Assessment to User : "+studentID);
+					for(String ass :  summaries) {
+						System.out.println(ass);
+					}
 					
 				} catch (RemoteException e) {
 					
@@ -112,6 +117,8 @@ public class StudentClient {
         if(args.length < 4) {
             throw new InvalidArgumentException(args.length);
         }
+        
+        //Submitted Answer variables
 
         //Parses arguments from command line
         //arguments are in different places based on operation, so switch needed here
@@ -127,13 +134,12 @@ public class StudentClient {
                 sessionID = Integer.parseInt(args[4]);
                 break;
             case "getAssessment":
-                //studentID = Integer.parseInt(args[3]);
-                sessionID = Integer.parseInt(args[3]);
-                courseCode = args[4];
+                courseCode = args[3];
                 break;
             case "submitAssignment":
-                account = Integer.parseInt(args[3]);
-                sessionID = Integer.parseInt(args[4]);
+                submittedAnswers[0] = Integer.parseInt(args[3]);
+                submittedAnswers[1] = Integer.parseInt(args[4]);
+                submittedAnswers[2] = Integer.parseInt(args[5]);
             break;
         }
     }
