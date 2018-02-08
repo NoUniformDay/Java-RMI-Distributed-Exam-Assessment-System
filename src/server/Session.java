@@ -13,17 +13,17 @@ public class Session extends TimerTask implements Serializable{
     private int timeAlive;
     private Timer timer;
     private volatile boolean alive;
-    private StudentAccount studentAccount;
-    public long sessionToken;
+    private int studentID; //Link session to student user
+    public int sessionToken;
 
     //static variables to specify max session time, and timer delay
     private static final int MAX_SESSION_LENGTH = 600 * 5;
-    private static final long DELAY = 100;
+    private static final long DELAY = 1000;
 
-    public Session(StudentAccount studentAccount) {
+    public Session(int studentID) {
         //generate a random 6 digit sessionToken
-        this.sessionToken = (int)(Math.random()*900000)+100000;
-        this.studentAccount = studentAccount;
+        this.sessionToken = (int) ((Math.random()*900000)+100000);
+        this.studentID = studentID;
         this.alive = true;
         this.timeAlive = 0;
         //create timer object to allow the task to be scheduled to run every second
@@ -41,7 +41,7 @@ public class Session extends TimerTask implements Serializable{
     public void run() {
         //increment the time the session has been alive
         //updates once every second, so it represents the # of seconds the session has been alive for
-        this.timeAlive++;
+       // this.timeAlive;
         //if session has been alive for 5 minutes
         if(this.timeAlive == MAX_SESSION_LENGTH) {
             //set alive to false and cancel the timer
@@ -58,7 +58,7 @@ public class Session extends TimerTask implements Serializable{
         return this.alive;
     }
 
-    public long getClientId(){
+    public int getClientId(){
         return this.sessionToken;
     }
 
@@ -70,13 +70,13 @@ public class Session extends TimerTask implements Serializable{
         return MAX_SESSION_LENGTH;
     }
 
-    public StudentAccount getStudentAccount(){
-        return this.studentAccount;
+    public int getStudentAccount(){
+        return this.studentID;
     }
 
     @Override
     public String toString() {
-        return "StudentAccount: " + this.studentAccount.getStudentID() + "\nSession Token: " +
+        return "StudentAccount: " + this.studentID + "\nSession Token: " +
                 this.sessionToken +"\nTime Alive: " + this.timeAlive + "\nAlive: " + this.alive;
     }
 }

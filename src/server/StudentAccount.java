@@ -14,15 +14,10 @@ public class StudentAccount implements Serializable {
     private int courseCode; //course code links to assessments
     private List<Assessment> assessments;
 
-    //static variable to linearly assignment StudentAccount numbers/studen ID's
-    private static int nextAcNum = 88769912;
-
     public StudentAccount (int sID, String pass) {
         this.assessments = new ArrayList<>();
         this.password = pass;
         this.studentID = sID;
-        //increment StudentAccount number, so next one will be updated
-        nextAcNum++;
     }
 
     //add new transactions to the StudentAccount

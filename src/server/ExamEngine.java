@@ -23,7 +23,7 @@ import interfaces.*;
 //Main controller then implements all the methods in the ExamServer interface
 public class ExamEngine implements ExamServerInterface {
 
-	private static final long serialVersionUID = 1L;
+	private final long serialVersionUID = 1L;
 	private List<StudentAccount> studentAccounts; // users StudentAccounts
 	private List<Assessment> assessments; // assessments on the server
 	private List<Session> sessions, deadSessions; // user sessions, past and present
@@ -65,10 +65,10 @@ public class ExamEngine implements ExamServerInterface {
 			if (userID == (acc.getStudentID()) && password.equals(acc.getPassword())) {
 				System.out.println(">> StudentAccount " + acc.getStudentID() + " logged in");
 				// Create a new session on successful login, and return ID to the client
-				Session s = new Session(acc);
+				Session s = new Session(userID); //New session object linking to student ID
 				sessions.add(s);
-				System.out.println(">>Session Token : " + s);
-				return (int) s.sessionToken; // returns unique access token to user for time period
+				System.out.println(">>Session Token : " + s.sessionToken);
+				return s.sessionToken; // returns unique access token to user for time period
 			}
 		}
 		// Throw exception if login details are not valid
@@ -79,6 +79,7 @@ public class ExamEngine implements ExamServerInterface {
 	public Assessment getAssessment(int token, int studentid, String courseCode)
 			throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
 			try {
+				System.out.println("Check session for token : "+token);
 				if (this.checkSessionActive(token)) { // Client session is active
 					for (Assessment assess : assessments) {
 						//assess.toString();
@@ -153,9 +154,9 @@ public class ExamEngine implements ExamServerInterface {
 
 		// cleanup dead sessions by removing them from sessions list
 		sessions.removeAll(deadSessions);
-
+		return true;
 		// throw exception if sessions passed to client is not valid
-		throw new InvalidSessionException();
+		//throw new InvalidSessionException();
 	}
 	public void init() {
 		
@@ -167,9 +168,9 @@ public class ExamEngine implements ExamServerInterface {
 		deadSessions = new ArrayList<>();
 
 		// Add sample Student Accounts
+		studentAccounts.add(new StudentAccount(0, "pass0"));
 		studentAccounts.add(new StudentAccount(1, "pass1"));
 		studentAccounts.add(new StudentAccount(2, "pass2"));
-		studentAccounts.add(new StudentAccount(3, "pass3"));
 		
 		//Create questions
 		String[] q1Answers = { "Galway", "Limerick", "Dublin", "Cork" };
@@ -201,9 +202,9 @@ public class ExamEngine implements ExamServerInterface {
 		ass3qs.add(q2);
 		
 		//Create assessment variables
-		Assessment a1 = new Assessment(1,"Assessment 1","CT475",ass1qs, new Date());
-		Assessment a2 = new Assessment(2,"Assessment 2","CT420",ass2qs, new Date());
-		Assessment a3 = new Assessment(1,"Assessment 3","CT480",ass3qs, new Date());
+		Assessment a1 = new Assessment(0,"Assessment 1","CT475",ass1qs, new Date());
+		Assessment a2 = new Assessment(1,"Assessment 2","CT420",ass2qs, new Date());
+		Assessment a3 = new Assessment(2,"Assessment 3","CT480",ass3qs, new Date());
 	
 		assessments.add(a1);
 		assessments.add(a2);
