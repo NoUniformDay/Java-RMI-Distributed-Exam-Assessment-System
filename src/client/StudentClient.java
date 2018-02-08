@@ -12,16 +12,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-//Client program, which connects to the bank using RMI and class methods of the remote bank object
+//Client program, which connects to the bank using RMI and class methods of the remote ExamEngine object
 public class StudentClient {
     static int serverAddress, serverPort, account;
     static String operation, password;
     static int studentID; //id of logged in student client
-    static int sessionID, id=0; //token for logged in student user
+    static int sessionID; //token for logged in student user
     static ExamServerInterface examEng; //Exam Server
-    static String courseCode; //new students course code, for querying assessment
+    static String courseCode; //course code, for querying assessment
     static Date startDate, endDate;
-    static ArrayList<String> assessments; //Student assessments (details)
+    static ArrayList<String> assessments; //Student assessments (heading)
     static Assessment assess; //Assessment student is working on
     static int[] submittedAnswers; //Submitted answer variables
 
@@ -49,6 +49,7 @@ public class StudentClient {
                     //Login with studentID and password
                 		//Returns a sessionID token for log in period
                     sessionID = examEng.login(studentID, password);
+                    System.out.println("Logged in Student ID : "+studentID+ " SessionID: "+sessionID);
                     
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -60,11 +61,15 @@ public class StudentClient {
             case "getAssessment":
                 try {
                     //Retrieves an assessment for logged in user for particular course code e.g "CT475"
+                		System.out.println("Getting Assessment for Student ID : " +studentID+" SessionID : "+sessionID+" Course Code : "+courseCode+"");
                 	 	assess = examEng.getAssessment(sessionID, studentID, courseCode);
-                	 	System.out.println("Assesment Downloaded!");
-                	 	assess.toString(); //Print assessment object
-                	 	System.out.println("Submit answers using the Question Number");
-                	 	System.out.println("Answers can be resubmitted multiple times up until the deadline");
+                	 	if(assess != null) {
+                	 		System.out.println("Assesment Downloaded!");
+                    	 	assess.toString(); //Print assessment object
+                    	 	System.out.println("Submit answers using the Question Number");
+                    	 	System.out.println("Answers can be resubmitted multiple times up until the deadline");
+                	 	}
+                	 	
                 //Catch exceptions that can be thrown from the server
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -77,11 +82,11 @@ public class StudentClient {
             case "submitAssessment":
             		try {
             			assess.selectAnswer(0, submittedAnswers[0]); //set selected answers from user
-            			assess.selectAnswer(1, submittedAnswers[0]);
-            			assess.selectAnswer(2, submittedAnswers[0]);
+            			assess.selectAnswer(1, submittedAnswers[1]);
+            			assess.selectAnswer(2, submittedAnswers[2]);
+            			System.out.println("Submmitted Assessment for StudentID: "+studentID+" Session ID :"+sessionID);
             			examEng.submitAssessment(sessionID, studentID, assess); //push assessment object to server
             			System.out.println("Assessment Submitted Successfully!");
-            			
             		} catch (RemoteException e) {
                         e.printStackTrace();
                 } catch (NoMatchingAssessment e) {
@@ -90,16 +95,14 @@ public class StudentClient {
 			break;
                 
             case "getAvailableSummary":
-     
 				try {
 					ArrayList<String> summaries = (ArrayList<String>) examEng.getAvailableSummary(sessionID, studentID);
 					System.out.println("Available Assessment to User : "+studentID);
-					for(String ass :  summaries) {
-						System.out.println(ass);
+					System.out.println("Summaries "+summaries.toString());
+					for(String as :  summaries) {
+						System.out.println(as);
 					}
-					
 				} catch (RemoteException e) {
-					
 					e.printStackTrace();
 				}        			
         		
@@ -116,8 +119,6 @@ public class StudentClient {
         if(args.length < 3) {
             throw new InvalidArgumentException(args.length);
         }
-        
-        //Submitted Answer variables
 
         //Parses arguments from command line
         //arguments are in different places based on operation, so switch needed here
@@ -132,12 +133,15 @@ public class StudentClient {
             		studentID = Integer.parseInt(args[3]);
                 break;
             case "getAssessment":
-                courseCode = args[3];
+            		studentID = Integer.parseInt(args[3]);
+                courseCode = args[4];
                 break;
             case "submitAssignment":
-                submittedAnswers[0] = Integer.parseInt(args[3]);
-                submittedAnswers[1] = Integer.parseInt(args[4]);
-                submittedAnswers[2] = Integer.parseInt(args[5]);
+            		studentID = Integer.parseInt(args[3]);
+            		courseCode = args[4];
+                submittedAnswers[0] = Integer.parseInt(args[4]);
+                submittedAnswers[1] = Integer.parseInt(args[6]);
+                submittedAnswers[2] = Integer.parseInt(args[7]);
             break;
         }
     }
