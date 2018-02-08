@@ -10,6 +10,7 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -28,14 +29,34 @@ public class Assessment implements AssessmentInterface {
 	public List<Question> questions; //list of questions in assessment 
 	
 	// Needs link to user ? 
-	public Assessment(int sID, String inf,String c, ArrayList<Question> qs, Date closingDate){
+	public Assessment(int sID, String inf,String c, ArrayList<Question> qs, int daysAway){
 		this.studentID = sID;
 		this.info = inf;
 		this.courseCode =c;
 		this.questions = qs;
-		this.closingDate = closingDate;
+		this.closingDate = createClosingDate(daysAway);
 	}
-
+	
+	// Sets the Deadline to be a certain amount of dates away
+	public Date createClosingDate(int daysAway) {
+		Calendar calendar = Calendar.getInstance();
+		// add given amount of days day to the date/calendar
+	    calendar.add(Calendar.DAY_OF_YEAR, daysAway);
+	    Date dueDate = calendar.getTime();
+	    return dueDate;
+	}
+	
+	// Checks if the Assessment deadline has passed
+	public Boolean isStillUp(Date date) {
+		if(date.after(this.closingDate)) {
+			System.out.println("Passed Deadline, Cannot submit Assessment");
+			System.out.println("Time now : "+date);
+			System.out.println("Due date : "+this.closingDate);
+			return false;
+		}
+		return true;
+	}
+	
 	// Return information about the assessment
 	public String getInformation() {
 		this.toString(); //print assesment details

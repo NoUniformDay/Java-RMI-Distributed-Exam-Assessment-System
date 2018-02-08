@@ -14,7 +14,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import exceptions.*;
@@ -88,6 +87,9 @@ public class ExamEngine implements ExamServerInterface {
 							return assess; // assessment object with corresponding student id and courseCode
 						}
 					}
+				}
+				else {
+					System.out.println("Couldn't validate Token");
 				}
 			} catch (InvalidSessionException e) {
 				e.printStackTrace();
@@ -201,13 +203,33 @@ public class ExamEngine implements ExamServerInterface {
 		ass3qs.add(q6);
 		ass3qs.add(q2);
 		
-		//Create assessment variables
-		Assessment a1 = new Assessment(0,"Assessment 1","CT475",ass1qs, new Date());
-		Assessment a2 = new Assessment(1,"Assessment 2","CT420",ass2qs, new Date());
-		Assessment a3 = new Assessment(2,"Assessment 3","CT480",ass3qs, new Date());
+		// Create Assessment objects assign to Students and saved to Server to be downloaded
+		
+		// Create Assessment for student number 0 due in 10, 20 and 30 days!
+		Assessment a1 = new Assessment(0,"Assessment 1","CT475",ass1qs, 10);
+		Assessment a2 = new Assessment(0,"Assessment 2","CT420",ass2qs, 20);
+		Assessment a3 = new Assessment(0,"Assessment 3","CT480",ass3qs, 30);
 	
 		assessments.add(a1);
 		assessments.add(a2);
 		assessments.add(a3);
+		
+		// Create Assessment for student number 1 due in 10, 20 and 30 days!
+		Assessment b1 = new Assessment(1,"Assessment 1","CT475",ass1qs, 10);
+		Assessment b2 = new Assessment(1,"Assessment 2","CT420",ass2qs, 20);
+		Assessment b3 = new Assessment(1,"Assessment 3","CT480",ass3qs, 30);
+	
+		assessments.add(b1);
+		assessments.add(b2);
+		assessments.add(b3);
+		
+		// Create Assessment for student number 2 due in 10, 20 and 30 days!
+		Assessment c1 = new Assessment(2,"Assessment 1","CT475",ass1qs, 10);
+		Assessment c2 = new Assessment(2,"Assessment 2","CT420",ass2qs, 20);
+		Assessment c3 = new Assessment(2,"Assessment 3","CT480",ass3qs, 30);
+	
+		assessments.add(c1);
+		assessments.add(c2);
+		assessments.add(c3);
 	}
 }

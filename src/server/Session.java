@@ -1,3 +1,11 @@
+/**
+ * 
+ * Server Class implementation
+ * Describes an Object that allows access to the server for a certain time period delay
+ * Written By Eric McEvoy - 13513267
+ * 30/01/2018
+ * 
+ */
 package server;
 
 import java.io.Serializable;
