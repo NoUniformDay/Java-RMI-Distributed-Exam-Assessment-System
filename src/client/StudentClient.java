@@ -47,10 +47,9 @@ public class StudentClient {
             case "login":
                 try {
                     //Login with studentID and password
-                		//Returns a sessionID token for log in period
+                		//Returns a sessionID token certain time period
                     sessionID = examEng.login(studentID, password);
                     System.out.println("Logged in Student ID : "+studentID+ " SessionID: "+sessionID);
-                    
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 } catch (InvalidLoginException e) {
@@ -97,7 +96,7 @@ public class StudentClient {
             case "getAvailableSummary":
 				try {
 					ArrayList<String> summaries = (ArrayList<String>) examEng.getAvailableSummary(sessionID, studentID);
-					System.out.println("Available Assessment to User : "+studentID);
+					System.out.println("Available Assessments to User : "+studentID);
 					System.out.println("Summaries "+summaries.toString());
 					for(String as :  summaries) {
 						System.out.println(as);
