@@ -28,8 +28,11 @@ public class StudentClient {
     public static void main (String args[]) throws UnauthorizedAccess, NoMatchingAssessment, InvalidQuestionNumber, InvalidOptionNumber {
         try {
             //Parse the command line arguments into the program
+        		submittedAnswers = new int[3];
             getCommandLineArguments(args);
-            //Set up the rmi registry and get the remote bank object from it
+            
+            //assess = new Assessment(account, courseCode, courseCode, null, account);
+            //Set up the rmi registry and get the remote ExamEngine object from it
             String name = "ExamServer";
             Registry registry = LocateRegistry.getRegistry(serverPort);
             examEng = (ExamServerInterface) registry.lookup(name);
@@ -50,6 +53,7 @@ public class StudentClient {
                 		//Returns a sessionID token certain time period
                     sessionID = examEng.login(studentID, password);
                     System.out.println("Logged in Student ID : "+studentID+ " SessionID: "+sessionID);
+                    System.out.println("Use your Session Token to Download, Submit and View Available Assessments!");
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 } catch (InvalidLoginException e) {
@@ -59,6 +63,8 @@ public class StudentClient {
 
             case "getAssessment":
                 try {
+                	
+                		//examEng.getSessionID();
                     //Retrieves an assessment for logged in user for particular course code e.g "CT475"
                 		System.out.println("Getting Assessment for Student ID : " +studentID+" SessionID : "+sessionID+" Course Code : "+courseCode+"");
                 	 	assess = examEng.getAssessment(sessionID, studentID, courseCode);
@@ -80,6 +86,11 @@ public class StudentClient {
             // submit and assignment any amount up until Assessment deadline
             case "submitAssessment":
             		try {
+            			System.out.println("Session before get call :"+sessionID);
+            			assess = examEng.getAssessment(sessionID, studentID, courseCode);
+            			System.out.println("Session after :"+sessionID);
+            			System.out.println("Assess downloaded  : "+assess);
+            			
             			assess.selectAnswer(0, submittedAnswers[0]); //set selected answers from user
             			assess.selectAnswer(1, submittedAnswers[1]);
             			assess.selectAnswer(2, submittedAnswers[2]);
@@ -97,9 +108,10 @@ public class StudentClient {
 				try {
 					ArrayList<String> summaries = (ArrayList<String>) examEng.getAvailableSummary(sessionID, studentID);
 					System.out.println("Available Assessments to User : "+studentID);
-					System.out.println("Summaries "+summaries.toString());
-					for(String as :  summaries) {
-						System.out.println(as);
+					System.out.println("");
+					for(String asInfo :  summaries) {
+						System.out.println(asInfo);
+						System.out.println("");
 					}
 				} catch (RemoteException e) {
 					e.printStackTrace();
@@ -130,17 +142,24 @@ public class StudentClient {
                 break;
             case "getAvailableSummary":
             		studentID = Integer.parseInt(args[3]);
+            		sessionID = Integer.parseInt(args[4]);
                 break;
             case "getAssessment":
             		studentID = Integer.parseInt(args[3]);
                 courseCode = args[4];
+                sessionID = Integer.parseInt(args[5]);
                 break;
-            case "submitAssignment":
+            case "submitAssessment":
+            		System.out.println("Args size :"+args.length);
+            		for(int i =0;i<args.length;i++) {
+            			System.out.println("Args : "+i+" "+args[i]);
+            		}
             		studentID = Integer.parseInt(args[3]);
             		courseCode = args[4];
-                submittedAnswers[0] = Integer.parseInt(args[4]);
-                submittedAnswers[1] = Integer.parseInt(args[6]);
-                submittedAnswers[2] = Integer.parseInt(args[7]);
+            		sessionID = Integer.parseInt(args[5]);
+                submittedAnswers[0] = Integer.parseInt(args[6]);
+                submittedAnswers[1] = Integer.parseInt(args[7]);
+                submittedAnswers[2] = Integer.parseInt(args[8]);
             break;
         }
     }

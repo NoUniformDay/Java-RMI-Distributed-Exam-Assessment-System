@@ -35,6 +35,9 @@ public interface AssessmentInterface extends Serializable {
 	// Return studentid associated with this assessment object
 	// This will be preset on the server before object is downloaded
 	public int getAssociatedID();
+	
+	//Additional method to check if Assessment is still up
+	public boolean checkAssessmentStillUp();
 
 }
 
