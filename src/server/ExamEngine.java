@@ -30,7 +30,7 @@ public class ExamEngine implements ExamServerInterface {
 	// Constructor is required
 	public ExamEngine() throws RemoteException {
 		super();
-		init(); //method below that adds to prepared assessments and questions
+		init(); //method below that adds prepared assessments and questions
 	}
 
 	public static void main(String[] args) {
@@ -88,10 +88,8 @@ public class ExamEngine implements ExamServerInterface {
 						}
 					}
 				}
-				else {
-					System.out.println("Couldn't validate Token");
-				}
 			} catch (InvalidSessionException e) {
+				System.out.println("Couldn't validate Token");
 				e.printStackTrace();
 			}
 		return null;
@@ -103,8 +101,12 @@ public class ExamEngine implements ExamServerInterface {
 			throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
 		try {
 			if (this.checkSessionActive(token)) { // Client session is active
-				assessments.add(completed); //add completed assessment to assessment list
-				System.out.println("Assessment Submitted Successfully!");
+				if(completed.checkAssessmentStillUp()) { // Deadline hasn't past
+					assessments.add(completed); //add completed assessment to assessment list
+					System.out.println("Assessment Submitted Successfully!");
+				}else{
+					System.out.println("Deadline passed!");
+				}
 			}
 		} catch (InvalidSessionException e) {
 			e.printStackTrace();
@@ -120,8 +122,11 @@ public class ExamEngine implements ExamServerInterface {
 				System.out.println("Getting Available Summary");
 				for(Assessment as :  assessments) {
 					if(as.getAssociatedID() == studentid) { //if assessment belongs to given student ID
-						String summary = as.getInformation();
-						summaries.add(summary);
+						if(as.checkAssessmentStillUp()) { //if assessment is still up
+							String summary = as.getInformation();
+							summaries.add(summary);
+						}
+						
 					}
 				}
 				return summaries;
@@ -163,7 +168,6 @@ public class ExamEngine implements ExamServerInterface {
 	public void init() {
 		
 		//Define constructor
-		
 		studentAccounts = new ArrayList();
 		assessments = new ArrayList<>();
 		sessions = new ArrayList<>();

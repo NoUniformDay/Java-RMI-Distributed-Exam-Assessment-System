@@ -28,7 +28,7 @@ public class Assessment implements AssessmentInterface {
 	private Date closingDate; //Closing date of assignment
 	public List<Question> questions; //list of questions in assessment 
 	
-	// Needs link to user ? 
+	// Constructor
 	public Assessment(int sID, String inf,String c, ArrayList<Question> qs, int daysAway){
 		this.studentID = sID;
 		this.info = inf;
@@ -47,7 +47,8 @@ public class Assessment implements AssessmentInterface {
 	}
 	
 	// Checks if the Assessment deadline has passed
-	public Boolean isStillUp(Date date) {
+	public boolean checkAssessmentStillUp() {
+		Date date = new Date();
 		if(date.after(this.closingDate)) {
 			System.out.println("Passed Deadline, Cannot submit Assessment");
 			System.out.println("Time now : "+date);
@@ -59,11 +60,11 @@ public class Assessment implements AssessmentInterface {
 	
 	// Return information about the assessment
 	public String getInformation() {
-		this.toString(); //print assesment details
-		for(Question q : questions) {
-			q.toString(); //prints assessment questions
-		}
-		return courseCode;
+		String info = this.info+" \n";
+		String courseCode = "For Module : "+this.courseCode+" \n";
+		String dueDate = "Due "+this.closingDate.toString();
+		
+		return info+courseCode+dueDate;
 	}
 
 	// Return the final date / time for submission of completed assessment

@@ -49,7 +49,7 @@ public class Session extends TimerTask implements Serializable{
     public void run() {
         //increment the time the session has been alive
         //updates once every second, so it represents the # of seconds the session has been alive for
-       // this.timeAlive;
+    		this.timeAlive++;
         //if session has been alive for 5 minutes
         if(this.timeAlive == MAX_SESSION_LENGTH) {
             //set alive to false and cancel the timer
