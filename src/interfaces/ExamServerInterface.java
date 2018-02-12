@@ -30,6 +30,8 @@ public interface ExamServerInterface extends Remote {
 	// Submit a completed assessment
 	public void submitAssessment(int token, int studentid, Assessment completed) throws 
 		UnauthorizedAccess, NoMatchingAssessment, RemoteException;
-
+       
+    // Get session token for a given logged in user
+	public int getSessionToken(int studentid) throws
+		UnauthorizedAccess, RemoteException;
 }
-
