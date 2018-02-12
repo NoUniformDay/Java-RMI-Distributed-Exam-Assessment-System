@@ -1,1 +1,0 @@
-javac server/* client/*
