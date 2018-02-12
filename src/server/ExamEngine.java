@@ -81,9 +81,8 @@ public class ExamEngine implements ExamServerInterface {
 				System.out.println("Check session for token : "+token);
 				if (this.checkSessionActive(token)) { // Client session is active
 					for (Assessment assess : assessments) {
-						//assess.toString();
 						if (assess.getAssociatedID() == studentid && assess.getCourseCode().equals(courseCode)) {
-							System.out.println("Found Assessment");
+							System.out.println("Found Assessment!");
 							return assess; // assessment object with corresponding student id and courseCode
 						}
 					}
@@ -136,6 +135,29 @@ public class ExamEngine implements ExamServerInterface {
 		}
 		return null;
     }
+    
+	// returns access token for given user
+	public int getSessionToken(int studentid) throws UnauthorizedAccess, RemoteException {
+		for (Session s : sessions) {
+			// Checks if the sessionID passed from client is in the sessions list and active
+			if (s.getStudentAccount() == studentid && s.isAlive()) {
+				return s.sessionToken;
+			}
+			// If session is in list, but timed out, add it to deadSessions list
+			// This flags timed out sessions for removeAll
+			// They will be removed next time this method is called
+			if (!s.isAlive()) {
+				System.out.println("\n>> Cleaning up timed out sessions");
+				System.out.println(">> SessionID: " + s.getClientId());
+				deadSessions.add(s);
+			}
+		}
+		
+		// cleanup dead sessions by removing them from sessions list
+		sessions.removeAll(deadSessions);
+		return 0;
+	}
+
 
 	// Check Student Session is still active.
 	private boolean checkSessionActive(int sessID) throws InvalidSessionException {
