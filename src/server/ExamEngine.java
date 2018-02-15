@@ -23,6 +23,8 @@ import interfaces.*;
 public class ExamEngine implements ExamServerInterface {
 
 	private final long serialVersionUID = 1L;
+	
+	
 	private List<StudentAccount> studentAccounts; // users StudentAccounts
 	private List<Assessment> assessments; // assessments on the server
 	private List<Session> sessions, deadSessions; // user sessions, past and present
@@ -125,7 +127,6 @@ public class ExamEngine implements ExamServerInterface {
 							String summary = as.getInformation();
 							summaries.add(summary);
 						}
-						
 					}
 				}
 				return summaries;
@@ -187,6 +188,8 @@ public class ExamEngine implements ExamServerInterface {
 		// throw exception if sessions passed to client is not valid
 		//throw new InvalidSessionException();
 	}
+	
+	// Initialize Student accounts, Assessments, Questions etc
 	public void init() {
 		
 		//Define constructor

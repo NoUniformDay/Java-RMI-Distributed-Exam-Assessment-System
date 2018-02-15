@@ -2,7 +2,8 @@
 /all.policy
 /client/
 /exceptions/
+/flush.sh
 /interfaces/
-/scripts/
 /server/
-/tests/
+/startClient.sh
+/startServer.sh
